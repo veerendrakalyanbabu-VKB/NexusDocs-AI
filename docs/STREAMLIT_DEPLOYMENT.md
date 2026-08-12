@@ -60,4 +60,4 @@ Update `README.md`:
 | Storage | `data/` folder | Ephemeral (re-index each session) |
 | Cost | Free | Free |
 
-For persistent cloud storage, see [GCP Deployment](GCP_DEPLOYMENT.md) (Project 3).
+For persistent cloud storage, use a separate GCP project (Portfolio Project #3).

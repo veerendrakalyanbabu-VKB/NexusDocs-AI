@@ -61,12 +61,14 @@ Recruitment pipeline analytics — KPIs, bottlenecks, and operational insights f
 
 ---
 
-### GCP GenAI Application · *Project 3*
-[![Repository](https://img.shields.io/badge/View_Cloud_Setup-4285F4?style=for-the-badge&logo=googlecloud)](https://github.com/veerendrakalyanbabu-VKB/AI-Document-QA-Assistant/blob/main/docs/GCP_DEPLOYMENT.md)
+### GCP GenAI Application · *Coming soon — separate repo*
+[![Status](https://img.shields.io/badge/Status-Portfolio_Project_3-F59E0B?style=for-the-badge)]()
 
-Cloud deployment of NexusDocs AI on **Cloud Run** with **Cloud Storage**, **BigQuery** analytics, **Vertex AI Gemini**, and **IAM**.
+A **separate** cloud project using Google Cloud Platform, BigQuery, Cloud Storage, IAM, and Generative AI.
 
-`Python` `GCP` `Cloud Run` `BigQuery` `Vertex AI`
+`Python` `GCP` `BigQuery` `Cloud Storage` `Vertex AI`
+
+*Not part of this repository — will be built as its own project.*
 
 ---
 

@@ -200,8 +200,7 @@ pytest tests/ -v
 |----------|-------------|
 | [Architecture](docs/ARCHITECTURE.md) | System design and component breakdown |
 | [Interview Guide](docs/INTERVIEW_GUIDE.md) | How to explain RAG in interviews |
-| [Streamlit Deployment](docs/STREAMLIT_DEPLOYMENT.md) | Deploy Project 2 live demo (free) |
-| [GCP Deployment](docs/GCP_DEPLOYMENT.md) | Project 3 cloud setup and deploy guide |
+| [Streamlit Deployment](docs/STREAMLIT_DEPLOYMENT.md) | Deploy the live demo (free) |
 
 ---
 
@@ -218,32 +217,10 @@ pytest tests/ -v
 
 ## Roadmap
 
-- [x] GCP cloud deployment (Portfolio Project #3) — see [GCP Deployment Guide](docs/GCP_DEPLOYMENT.md)
-- [x] Docker containerization
+- [x] Streamlit Cloud deployment
 - [ ] Hybrid retrieval (semantic + keyword)
 - [ ] Evaluation harness for answer quality
-- [ ] Secret Manager integration
-
----
-
-## Project 3 — GCP Generative AI Application
-
-Cloud extension of NexusDocs AI integrating **Google Cloud Run**, **Cloud Storage**, **BigQuery**, **Vertex AI Gemini**, and **IAM**.
-
-| Component | Technology |
-|-----------|------------|
-| Hosting | Cloud Run |
-| Document persistence | Cloud Storage |
-| Structured analytics | BigQuery + SQL |
-| GenAI | Vertex AI (Gemini) |
-| Access control | IAM service accounts |
-
-**Deploy:** see [docs/GCP_DEPLOYMENT.md](docs/GCP_DEPLOYMENT.md)
-
-```powershell
-.\scripts\gcp-setup.ps1 -ProjectId YOUR_PROJECT_ID
-.\scripts\gcp-deploy.ps1 -ProjectId YOUR_PROJECT_ID
-```
+- [ ] Demo screenshot in README
 
 ---
 

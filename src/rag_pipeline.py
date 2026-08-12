@@ -133,11 +133,6 @@ def generate_answer(
     if not context.strip():
         return "I don't know based on the provided document."
 
-    if provider_name == "vertex":
-        from src.cloud.vertex_ai import generate_vertex_answer
-
-        return generate_vertex_answer(question, context)
-
     if provider_name == "openai":
         llm = create_openai_llm(
             settings.openai_model,
