@@ -132,13 +132,17 @@ python -m venv .venv
 ```bash
 .venv\Scripts\activate
 pip install -r requirements.txt
+pip install -r requirements-local.txt
 ```
 
 **macOS / Linux**
 ```bash
 source .venv/bin/activate
 pip install -r requirements.txt
+pip install -r requirements-local.txt
 ```
+
+> `requirements-local.txt` adds FLAN-T5 + Hugging Face embeddings for **offline local** use. Streamlit Cloud only needs `requirements.txt` + OpenAI API key.
 
 ### Configuration (optional)
 
@@ -150,9 +154,10 @@ copy .env.example .env   # Windows
 ```env
 OPENAI_API_KEY=your-key-here
 OPENAI_MODEL=gpt-4o-mini
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 ```
 
-Without an API key, the app uses the local `google/flan-t5-small` model.
+Without an API key, install `requirements-local.txt` and the app uses local FLAN-T5 + Hugging Face embeddings.
 
 ### Run
 

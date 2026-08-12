@@ -147,7 +147,15 @@ def generate_answer(
         response = llm.invoke(messages)
         return response.content.strip()
 
-    llm = create_local_llm(settings.local_llm_model)
+    try:
+        llm = create_local_llm(settings.local_llm_model)
+    except ImportError as error:
+        raise RuntimeError(
+            "Local FLAN-T5 is not installed. For cloud deployment, add "
+            "OPENAI_API_KEY in Streamlit Secrets. For local offline mode, run: "
+            "pip install -r requirements-local.txt"
+        ) from error
+
     trimmed_context = _trim_context(context)
     return llm(build_prompt(question, trimmed_context))
 

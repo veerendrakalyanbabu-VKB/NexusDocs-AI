@@ -19,7 +19,8 @@ SUPPORTED_EXTENSIONS = {".pdf", ".docx", ".txt"}
 DEFAULT_CHUNK_SIZE = 1000
 DEFAULT_CHUNK_OVERLAP = 200
 DEFAULT_TOP_K = 4
-DEFAULT_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+DEFAULT_HUGGINGFACE_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+DEFAULT_OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
 DEFAULT_LOCAL_LLM = "google/flan-t5-small"
 DEFAULT_OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
@@ -31,10 +32,20 @@ class AppSettings:
     chunk_size: int = DEFAULT_CHUNK_SIZE
     chunk_overlap: int = DEFAULT_CHUNK_OVERLAP
     top_k: int = DEFAULT_TOP_K
-    embedding_model: str = DEFAULT_EMBEDDING_MODEL
+    huggingface_embedding_model: str = DEFAULT_HUGGINGFACE_EMBEDDING_MODEL
+    openai_embedding_model: str = os.getenv(
+        "OPENAI_EMBEDDING_MODEL",
+        DEFAULT_OPENAI_EMBEDDING_MODEL,
+    )
     local_llm_model: str = DEFAULT_LOCAL_LLM
     openai_model: str = DEFAULT_OPENAI_MODEL
     openai_api_key: str | None = os.getenv("OPENAI_API_KEY")
+
+    @property
+    def embedding_model(self) -> str:
+        if self.openai_api_key:
+            return self.openai_embedding_model
+        return self.huggingface_embedding_model
 
     @property
     def llm_provider(self) -> str:

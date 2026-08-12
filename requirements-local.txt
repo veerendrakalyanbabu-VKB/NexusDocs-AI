@@ -1,0 +1,8 @@
+# Optional local-only dependencies (offline FLAN-T5 + Hugging Face embeddings)
+# Install after requirements.txt for full local development:
+#   pip install -r requirements-local.txt
+
+langchain-huggingface>=0.1.0
+sentence-transformers>=3.0.0
+transformers>=4.40.0
+torch>=2.2.0

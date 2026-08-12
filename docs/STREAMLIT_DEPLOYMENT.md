@@ -15,9 +15,10 @@ Free hosting for your NexusDocs AI portfolio demo.
    ```toml
    OPENAI_API_KEY = "sk-your-openai-key"
    OPENAI_MODEL = "gpt-4o-mini"
+   OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
    ```
 
-   > OpenAI is recommended on Streamlit Cloud. The local FLAN-T5 model is too heavy for the free tier.
+   > **Required on Streamlit Cloud.** The cloud build uses OpenAI for both embeddings and answers (no torch / FLAN-T5).
 
 4. Click **Deploy** and wait 5–10 minutes for the first build.
 
@@ -48,16 +49,19 @@ Update `README.md`:
 
 | Issue | Fix |
 |-------|-----|
-| Build fails / out of memory | Add `OPENAI_API_KEY` in Secrets (avoids loading FLAN-T5) |
-| App crashes on first question | Wait for embedding model download, then retry |
+| **Error installing requirements** | Fixed — cloud build no longer installs torch. Reboot app after pulling latest `main`. |
+| Build fails / out of memory | Add `OPENAI_API_KEY` in Secrets |
+| App crashes on first question | Ensure OpenAI key is valid and has credits |
 | Upload fails | Keep files under 200 MB |
 
 ## Local vs cloud
 
 | | Local | Streamlit Cloud |
 |---|-------|-----------------|
-| LLM | FLAN-T5 or OpenAI | OpenAI (recommended) |
+| LLM | FLAN-T5 or OpenAI | **OpenAI (required)** |
+| Embeddings | Hugging Face or OpenAI | **OpenAI (required)** |
+| Extra install | `pip install -r requirements-local.txt` | Not needed |
 | Storage | `data/` folder | Ephemeral (re-index each session) |
-| Cost | Free | Free |
+| Cost | Free | Free (+ small OpenAI usage) |
 
 For persistent cloud storage, use a separate GCP project (Portfolio Project #3).
