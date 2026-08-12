@@ -1,13 +1,24 @@
+<div align="center">
+
 # AI-Powered Document Q&A Assistant
+
+**Upload documents · Build a semantic index · Ask grounded questions**
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.61-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![RAG](https://img.shields.io/badge/RAG-Enabled-22C55E?style=for-the-badge)]()
+[![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-2563EB?style=for-the-badge)]()
+[![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)](LICENSE)
+
+[Live demo](#quick-start) · [Architecture](docs/ARCHITECTURE.md) · [Interview guide](docs/INTERVIEW_GUIDE.md)
+
+</div>
+
+---
 
 An AI-powered document question-answering application that lets users upload documents and receive **context-grounded answers** using a full **Retrieval-Augmented Generation (RAG)** pipeline.
 
 Built with **Python**, **Streamlit**, **Hugging Face embeddings**, **FAISS vector search**, and optional **OpenAI** integration.
-
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.61-red)
-![RAG](https://img.shields.io/badge/RAG-Enabled-green)
-![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 ## Project overview
 
@@ -64,7 +75,7 @@ Streamlit interface
 ### 1. Clone and install
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/veerendrakalyanbabu-VKB/AI-Document-QA-Assistant.git
 cd AI-Document-QA-Assistant
 python -m venv .venv
 
@@ -181,4 +192,10 @@ MIT License. See [LICENSE](LICENSE).
 
 ## Author
 
-**Veerendra Kalyan** — Portfolio project, 2026
+**[Veerendra Kalyan](https://github.com/veerendrakalyanbabu-VKB)** — Portfolio project, 2026
+
+<div align="center">
+
+⭐ **Star this repo if you found it useful**
+
+</div>
