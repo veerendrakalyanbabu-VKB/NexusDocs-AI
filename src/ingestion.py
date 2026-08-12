@@ -40,6 +40,28 @@ def list_uploaded_files(upload_dir: Path | None = None) -> list[Path]:
     )
 
 
+def delete_uploaded_file(file_path: Path, upload_dir: Path | None = None) -> None:
+    """Remove a single file from the upload directory."""
+    settings = get_settings()
+    directory = upload_dir or settings.upload_dir
+    target = file_path if file_path.is_absolute() else directory / file_path.name
+
+    if target.exists() and target.is_file():
+        target.unlink()
+
+
+def index_matches_library(index_dir: Path | None = None, upload_dir: Path | None = None) -> bool:
+    """Return True when the on-disk index reflects the current upload library."""
+    settings = get_settings()
+    manifest = read_index_manifest(index_dir or settings.index_dir)
+    if not manifest:
+        return False
+
+    current_files = {path.name for path in list_uploaded_files(upload_dir)}
+    indexed_files = set(manifest.get("documents", []))
+    return current_files == indexed_files and bool(current_files)
+
+
 def load_all_documents(file_paths: list[Path]) -> list:
     documents = []
 

@@ -2,151 +2,182 @@
 
 # AI-Powered Document Q&A Assistant
 
-**Upload documents · Build a semantic index · Ask grounded questions**
+**Context-grounded document intelligence powered by Retrieval-Augmented Generation**
+
+Upload documents · Build a semantic index · Ask questions · Get cited answers
+
+<br>
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.61-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![RAG](https://img.shields.io/badge/RAG-Enabled-22C55E?style=for-the-badge)]()
-[![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-2563EB?style=for-the-badge)]()
-[![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)](LICENSE)
+[![RAG](https://img.shields.io/badge/RAG-Pipeline-22C55E?style=for-the-badge)](https://github.com/veerendrakalyanbabu-VKB/AI-Document-QA-Assistant)
+[![FAISS](https://img.shields.io/badge/Vector_Search-FAISS-6366F1?style=for-the-badge)](https://github.com/facebookresearch/faiss)
+[![License](https://img.shields.io/badge/License-MIT-64748B?style=for-the-badge)](LICENSE)
 
-[Live demo](#quick-start) · [Architecture](docs/ARCHITECTURE.md) · [Interview guide](docs/INTERVIEW_GUIDE.md)
+<br>
+
+[Features](#-features) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [Documentation](#-documentation) · [Author](#-author)
 
 </div>
 
 ---
 
-An AI-powered document question-answering application that lets users upload documents and receive **context-grounded answers** using a full **Retrieval-Augmented Generation (RAG)** pipeline.
+## Overview
 
-Built with **Python**, **Streamlit**, **Hugging Face embeddings**, **FAISS vector search**, and optional **OpenAI** integration.
+An end-to-end **GenAI application** that lets users upload **PDF, DOCX, and TXT** files, index them with **semantic embeddings**, retrieve the most relevant passages with **FAISS**, and generate **grounded answers** using a local **FLAN-T5** model or optional **OpenAI API**.
 
-## Project overview
+Built as a portfolio-grade project to demonstrate real-world **RAG**, **prompt engineering**, **vector search**, and **LLM application development**.
 
-Users upload documents, the system extracts and chunks the text, generates embeddings, stores them in a FAISS vector index, retrieves the most relevant passages for each question, and sends that context to an LLM for a grounded response.
+---
 
-## How it works
+## Demo
 
-```text
-User uploads document
-        ↓
-Document ingestion
-        ↓
-Text extraction
-        ↓
-Text chunking
-        ↓
-Embeddings generation
-        ↓
-Vector / semantic search
-        ↓
-Relevant context retrieval
-        ↓
-LLM
-        ↓
-Context-grounded answer
-        ↓
-Streamlit interface
-```
+| Step | Action |
+|------|--------|
+| 1 | Upload a document (or click **Demo** for a sample) |
+| 2 | Click **Save** to add files to the library |
+| 3 | Click **Build knowledge base** |
+| 4 | Ask a question in the chat panel |
+| 5 | Review the answer and expand **source citations** |
+
+> Run locally: `streamlit run app.py` → [http://localhost:8501](http://localhost:8501)
+
+**NexusDocs AI** is the product name used in the Streamlit interface.
+
+> **Tip:** Add a screenshot at `docs/assets/demo.png` and uncomment the line below for extra impact on GitHub.
+
+<!-- ![NexusDocs AI Demo](docs/assets/demo.png) -->
+
+---
 
 ## Features
 
-- Document upload for **PDF**, **DOCX**, and **TXT**
-- Configurable chunk size, overlap, and top-k retrieval
-- Semantic embeddings with `sentence-transformers/all-MiniLM-L6-v2`
-- FAISS vector search for fast similarity retrieval
-- Grounded answer generation with **FLAN-T5** or **OpenAI**
-- Futuristic Streamlit UI with chat, pipeline status, and source citations
-- One-click demo document for quick testing
+| Capability | Description |
+|------------|-------------|
+| **Multi-format ingestion** | PDF, DOCX, TXT document upload |
+| **Semantic chunking** | Configurable chunk size and overlap |
+| **Embeddings** | `sentence-transformers/all-MiniLM-L6-v2` |
+| **Vector retrieval** | FAISS top-k similarity search |
+| **Grounded generation** | FLAN-T5 (local) or OpenAI (optional) |
+| **Source citations** | Expandable passages with real FAISS similarity scores |
+| **Modern UI** | NexusDocs AI command center, pipeline tracker, quick actions |
+| **Test coverage** | Unit tests for core RAG components |
 
-## Tech stack
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[Upload] --> B[Loader]
+    B --> C[Chunker]
+    C --> D[Embeddings]
+    D --> E[FAISS Index]
+    F[Question] --> G[Retriever]
+    E --> G
+    G --> H[Prompt Builder]
+    H --> I[LLM]
+    I --> J[Answer + Sources]
+```
+
+<details>
+<summary><strong>Pipeline stages</strong></summary>
+
+```text
+Upload → Ingest → Chunk → Embed → Index → Retrieve → Generate → Streamlit UI
+```
+
+</details>
+
+---
+
+## Tech Stack
 
 | Layer | Technology |
 |-------|------------|
 | Language | Python |
 | UI | Streamlit |
-| RAG orchestration | LangChain |
+| Orchestration | LangChain |
 | Embeddings | Hugging Face / Sentence Transformers |
-| Vector search | FAISS |
-| LLM | FLAN-T5 (local) or OpenAI API |
-| Document parsing | PyPDF, python-docx |
+| Vector DB | FAISS |
+| LLM | FLAN-T5 · OpenAI API |
+| Parsing | PyPDF · python-docx |
+| Testing | pytest |
 
-## Quick start
+---
 
-### 1. Clone and install
+## Quick Start
+
+### Prerequisites
+
+- Python 3.10+
+- Git
+
+### Installation
 
 ```bash
 git clone https://github.com/veerendrakalyanbabu-VKB/AI-Document-QA-Assistant.git
 cd AI-Document-QA-Assistant
 python -m venv .venv
+```
 
-# Windows
+**Windows**
+```bash
 .venv\Scripts\activate
-
-# macOS / Linux
-source .venv/bin/activate
-
 pip install -r requirements.txt
 ```
 
-### 2. Configure environment (optional)
-
+**macOS / Linux**
 ```bash
-copy .env.example .env
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-Add your OpenAI key for stronger answers:
+### Configuration (optional)
+
+```bash
+copy .env.example .env   # Windows
+# cp .env.example .env   # macOS/Linux
+```
 
 ```env
-OPENAI_API_KEY=sk-your-key-here
+OPENAI_API_KEY=your-key-here
 OPENAI_MODEL=gpt-4o-mini
 ```
 
 Without an API key, the app uses the local `google/flan-t5-small` model.
 
-### 3. Run the app
+### Run
 
 ```bash
 streamlit run app.py
 ```
 
-Open [http://localhost:8501](http://localhost:8501).
+Open **[http://localhost:8501](http://localhost:8501)**
 
-## Usage
+---
 
-1. Upload documents in the sidebar (or click **Demo**)
-2. Click **Save**
-3. Tune retrieval settings if needed
-4. Click **Build knowledge base**
-5. Ask questions in the chat panel
-6. Review answers and expand source citations
-
-## Project structure
+## Project Structure
 
 ```text
 AI-Document-QA-Assistant/
-├── app.py
+├── app.py                  # Streamlit entry point
 ├── src/
-│   ├── config.py
-│   ├── document_loader.py
-│   ├── chunker.py
-│   ├── embeddings.py
-│   ├── vector_store.py
-│   ├── retriever.py
-│   ├── ingestion.py
-│   ├── rag_pipeline.py
-│   └── ui/
-├── tests/
-├── docs/
-│   ├── ARCHITECTURE.md
-│   └── INTERVIEW_GUIDE.md
-├── data/
-│   ├── sample/
-│   ├── uploads/
-│   └── faiss_index/
-├── .streamlit/config.toml
-├── requirements.txt
-└── README.md
+│   ├── config.py           # Environment & paths
+│   ├── document_loader.py  # PDF / DOCX / TXT parsing
+│   ├── chunker.py          # Text splitting
+│   ├── embeddings.py       # Hugging Face embeddings
+│   ├── vector_store.py     # FAISS build & load
+│   ├── retriever.py        # Semantic retrieval
+│   ├── ingestion.py        # Upload & indexing workflow
+│   ├── rag_pipeline.py     # RAG + LLM generation
+│   └── ui/                 # UI components & theme
+├── tests/                  # Unit tests
+├── docs/                   # Architecture & interview guide
+└── .streamlit/config.toml  # App theme
 ```
+
+---
 
 ## Testing
 
@@ -154,48 +185,54 @@ AI-Document-QA-Assistant/
 pytest tests/ -v
 ```
 
-## What this project demonstrates
-
-- How RAG works end to end
-- Why documents are chunked before retrieval
-- What embeddings and semantic search do
-- Why retrieved context is passed to an LLM
-- How prompt design reduces hallucination
-- How Python integrates AI models and APIs
-- How an AI application is exposed through a UI
+---
 
 ## Documentation
 
-- [Architecture](docs/ARCHITECTURE.md)
-- [Interview guide](docs/INTERVIEW_GUIDE.md)
+| Resource | Description |
+|----------|-------------|
+| [Architecture](docs/ARCHITECTURE.md) | System design and component breakdown |
+| [Interview Guide](docs/INTERVIEW_GUIDE.md) | How to explain RAG in interviews |
 
-## Resume-ready summary
+---
 
-**AI-Powered Document Q&A Assistant | Python, LLM, RAG, Embeddings, Vector Search, Streamlit, APIs | 2026**
+## What This Project Demonstrates
 
-- Developed an AI-powered document question-answering application that enables users to upload documents and obtain context-grounded responses.
-- Implemented a Retrieval-Augmented Generation (RAG) workflow covering document ingestion, text processing, chunking, embeddings, semantic retrieval, and LLM-based response generation.
-- Designed retrieval and prompt workflows to provide relevant document context to the LLM and improve answer relevance.
-- Built an interactive Streamlit interface for document upload and question-answer interaction.
-- Structured the application for reproducible development, GitHub portfolio presentation, documentation, and future production enhancements.
+- End-to-end **RAG** implementation
+- **Document chunking** for retrieval precision
+- **Embedding** and **semantic search** concepts
+- **Prompt design** for grounded, low-hallucination answers
+- **Python + API** integration with LLMs
+- Production-minded **project structure**, tests, and documentation
+
+---
 
 ## Roadmap
 
 - [ ] Hybrid retrieval (semantic + keyword)
 - [ ] Docker deployment
 - [ ] Evaluation harness for answer quality
-- [ ] GCP deployment integration (Project #3)
+- [ ] GCP cloud deployment (Portfolio Project #3)
 
-## License
-
-MIT License. See [LICENSE](LICENSE).
+---
 
 ## Author
 
-**[Veerendra Kalyan](https://github.com/veerendrakalyanbabu-VKB)** — Portfolio project, 2026
+**Veerendra Kalyan**
+
+AI / GenAI Portfolio Project · 2026
+
+- GitHub: [@veerendrakalyanbabu-VKB](https://github.com/veerendrakalyanbabu-VKB)
+- Repository: [AI-Document-QA-Assistant](https://github.com/veerendrakalyanbabu-VKB/AI-Document-QA-Assistant)
+
+---
+
+## License
+
+This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
 
 <div align="center">
 
-⭐ **Star this repo if you found it useful**
+⭐ **If this project helped you, consider starring the repository!**
 
 </div>

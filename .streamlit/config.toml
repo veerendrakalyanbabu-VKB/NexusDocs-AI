@@ -1,11 +1,11 @@
 [theme]
 base = "dark"
 primaryColor = "#6366F1"
-backgroundColor = "#04060F"
-secondaryBackgroundColor = "#0C1224"
+backgroundColor = "#02040A"
+secondaryBackgroundColor = "#0A1020"
 textColor = "#F8FAFC"
 linkColor = "#22D3EE"
-codeBackgroundColor = "#111827"
+codeBackgroundColor = "#0C1224"
 borderColor = "#1E293B"
 font = "Space Grotesk"
 

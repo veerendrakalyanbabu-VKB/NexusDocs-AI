@@ -10,6 +10,8 @@ import streamlit as st
 from src.config import SUPPORTED_EXTENSIONS, get_settings
 from src.ingestion import (
     clear_knowledge_base,
+    delete_uploaded_file,
+    index_matches_library,
     ingest_documents,
     list_uploaded_files,
     read_index_manifest,
@@ -19,6 +21,7 @@ from src.rag_pipeline import format_sources, retrieve_documents, stream_answer
 from src.ui.components import (
     render_chat_header,
     render_file_library,
+    render_footer,
     render_hero,
     render_metrics,
     render_pipeline,
@@ -49,14 +52,20 @@ def init_session_state() -> None:
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    st.session_state.index_ready = get_settings().index_ready
-
     if "chunk_size" not in st.session_state:
         st.session_state.chunk_size = get_settings().chunk_size
     if "chunk_overlap" not in st.session_state:
         st.session_state.chunk_overlap = get_settings().chunk_overlap
     if "top_k" not in st.session_state:
         st.session_state.top_k = get_settings().top_k
+
+    sync_index_state()
+
+
+def sync_index_state() -> None:
+    settings = get_settings()
+    disk_ready = settings.index_ready and index_matches_library()
+    st.session_state.index_ready = disk_ready
 
 
 def load_demo_document() -> None:
@@ -69,7 +78,18 @@ def load_demo_document() -> None:
     uploads.mkdir(parents=True, exist_ok=True)
     shutil.copy(sample_path, uploads / sample_path.name)
     st.session_state.index_ready = False
-    st.toast("Demo document loaded into library.", icon=":material/auto_awesome:")
+    st.toast("Demo document loaded — build the knowledge base next.", icon=":material/auto_awesome:")
+
+
+def handle_file_deletion() -> None:
+    file_name = st.session_state.pop("file_to_delete", None)
+    if not file_name:
+        return
+
+    delete_uploaded_file(Path(file_name))
+    st.session_state.index_ready = False
+    st.toast(f"Removed {file_name}. Rebuild the knowledge base.", icon=":material/delete:")
+    st.rerun()
 
 
 def render_sidebar() -> None:
@@ -118,21 +138,21 @@ def render_sidebar() -> None:
                 "Chunk size",
                 min_value=400,
                 max_value=2000,
-                value=settings.chunk_size,
+                value=st.session_state.chunk_size,
                 step=100,
             )
             st.session_state.chunk_overlap = st.slider(
                 "Chunk overlap",
                 min_value=50,
                 max_value=400,
-                value=settings.chunk_overlap,
+                value=st.session_state.chunk_overlap,
                 step=25,
             )
             st.session_state.top_k = st.slider(
                 "Top-k results",
                 min_value=1,
                 max_value=8,
-                value=settings.top_k,
+                value=st.session_state.top_k,
             )
 
             if st.button(
@@ -195,12 +215,12 @@ def render_source_cards(sources: list[dict]) -> None:
         chunk_id = source.get("chunk_id", "N/A")
         file_type = source.get("file_type", "file").upper()
         page = source.get("page")
+        relevance = source.get("relevance", 0)
 
         meta_parts = [file_type, f"chunk {chunk_id}"]
         if page:
             meta_parts.append(f"page {page}")
 
-        relevance = max(95 - (index - 1) * 12, 55)
         with st.expander(
             f"Source {index} · {label} · {' · '.join(meta_parts)} · {relevance}% match",
             expanded=index == 1,
@@ -210,8 +230,10 @@ def render_source_cards(sources: list[dict]) -> None:
 
 
 def render_chat_history() -> None:
+    files = list_uploaded_files()
+
     if not st.session_state.messages:
-        render_welcome(st.session_state.index_ready)
+        render_welcome(st.session_state.index_ready, len(files))
         return
 
     for message in st.session_state.messages:
@@ -225,7 +247,7 @@ def render_chat_history() -> None:
                 render_source_cards(message["sources"])
 
 
-def handle_user_prompt(prompt: str) -> None:
+def queue_user_prompt(prompt: str) -> None:
     prompt = prompt.strip()
     if not prompt:
         return
@@ -237,10 +259,15 @@ def handle_user_prompt(prompt: str) -> None:
         )
         return
 
-    with st.chat_message("user", avatar=":material/person:"):
-        st.markdown(prompt)
-
     st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state.generating_for = prompt
+    st.rerun()
+
+
+def generate_assistant_response() -> None:
+    prompt = st.session_state.pop("generating_for", None)
+    if not prompt:
+        return
 
     with st.chat_message("assistant", avatar=":material/psychology:"):
         try:
@@ -268,6 +295,7 @@ def handle_user_prompt(prompt: str) -> None:
 def main() -> None:
     inject_global_styles()
     init_session_state()
+    handle_file_deletion()
     render_sidebar()
 
     render_hero()
@@ -287,27 +315,36 @@ def main() -> None:
     left_col, right_col = st.columns([0.36, 0.64], gap="large")
 
     with left_col:
-        render_pipeline(st.session_state.index_ready)
+        render_pipeline(st.session_state.index_ready, len(uploaded_files))
         render_system_insights(manifest)
         render_quick_actions(QUICK_ACTIONS)
 
     with right_col:
         with st.container(border=True):
             render_chat_header(st.session_state.index_ready)
-            render_chat_history()
+
+            with st.container():
+                render_chat_history()
+
+                if st.session_state.get("generating_for"):
+                    generate_assistant_response()
+                    st.rerun()
+
             if not st.session_state.messages and st.session_state.index_ready:
                 st.caption("Try: Summarize the document · List key takeaways · Find definitions")
 
     pending_prompt = st.session_state.pop("pending_prompt", None)
     prompt = st.chat_input(
         "Ask anything about your documents...",
-        submit_mode="disable",
+        disabled=not st.session_state.index_ready,
     )
 
     if pending_prompt:
-        handle_user_prompt(pending_prompt)
+        queue_user_prompt(pending_prompt)
     elif prompt:
-        handle_user_prompt(prompt)
+        queue_user_prompt(prompt)
+
+    render_footer()
 
 
 if __name__ == "__main__":

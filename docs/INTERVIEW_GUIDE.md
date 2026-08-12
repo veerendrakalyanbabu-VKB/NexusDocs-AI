@@ -61,11 +61,11 @@ The prompt instructs the model to respond with:
 
 ## Demo flow for interviews
 
-1. Open the app
-2. Click **Demo** or upload a document
+1. Open **NexusDocs AI** (`streamlit run app.py`)
+2. Click **Demo** or upload a document and click **Save**
 3. Click **Build knowledge base**
 4. Ask: "Which file formats are supported?"
-5. Show the answer and expand **Sources**
+5. Show the answer and expand **Sources** (note real FAISS similarity scores)
 
 This proves the full pipeline works live.
 
