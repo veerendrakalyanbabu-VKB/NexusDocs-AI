@@ -8,9 +8,15 @@ from pathlib import Path
 from typing import Any
 
 from src.chunker import split_documents
-from src.config import SUPPORTED_EXTENSIONS, AppSettings, get_settings
+from src.config import SUPPORTED_EXTENSIONS, get_settings
 from src.document_loader import load_document
 from src.vector_store import build_vector_store
+
+
+def _persist_cloud_state() -> None:
+    from src.cloud.gcs_storage import sync_to_gcs
+
+    sync_to_gcs()
 
 
 def save_uploaded_file(uploaded_file, upload_dir: Path | None = None) -> Path:
@@ -23,6 +29,18 @@ def save_uploaded_file(uploaded_file, upload_dir: Path | None = None) -> Path:
     with destination.open("wb") as handle:
         handle.write(uploaded_file.getbuffer())
 
+    if settings.bigquery_enabled:
+        from src.cloud.bigquery_logger import log_document_event
+
+        suffix = Path(uploaded_file.name).suffix.lower().lstrip(".")
+        log_document_event(
+            event_type="upload",
+            file_name=uploaded_file.name,
+            file_type=suffix,
+            file_size_bytes=destination.stat().st_size,
+        )
+
+    _persist_cloud_state()
     return destination
 
 
@@ -48,6 +66,17 @@ def delete_uploaded_file(file_path: Path, upload_dir: Path | None = None) -> Non
 
     if target.exists() and target.is_file():
         target.unlink()
+
+        if settings.bigquery_enabled:
+            from src.cloud.bigquery_logger import log_document_event
+
+            log_document_event(
+                event_type="delete",
+                file_name=target.name,
+                file_type=target.suffix.lower().lstrip("."),
+            )
+
+        _persist_cloud_state()
 
 
 def index_matches_library(index_dir: Path | None = None, upload_dir: Path | None = None) -> bool:
@@ -98,7 +127,7 @@ def read_index_manifest(index_dir: Path | None = None) -> dict[str, Any]:
 
 
 def ingest_documents(
-  *,
+    *,
     chunk_size: int | None = None,
     chunk_overlap: int | None = None,
     index_path: str | Path | None = None,
@@ -137,6 +166,19 @@ def ingest_documents(
     }
     write_index_manifest(manifest, index_target)
 
+    if settings.bigquery_enabled:
+        from src.cloud.bigquery_logger import log_document_event
+
+        for file_path in files:
+            log_document_event(
+                event_type="index",
+                file_name=file_path.name,
+                file_type=file_path.suffix.lower().lstrip("."),
+                file_size_bytes=file_path.stat().st_size,
+                chunk_count=len(chunks),
+            )
+
+    _persist_cloud_state()
     return manifest
 
 
@@ -154,3 +196,7 @@ def clear_knowledge_base(
         shutil.rmtree(index)
 
     uploads.mkdir(parents=True, exist_ok=True)
+
+    from src.cloud.gcs_storage import clear_gcs_data
+
+    clear_gcs_data()

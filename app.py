@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import shutil
+import time
 
 import streamlit as st
 
@@ -20,6 +21,7 @@ from src.ingestion import (
 from src.rag_pipeline import format_sources, retrieve_documents, stream_answer
 from src.ui.components import (
     render_chat_header,
+    render_cloud_panel,
     render_file_library,
     render_footer,
     render_hero,
@@ -58,6 +60,11 @@ def init_session_state() -> None:
         st.session_state.chunk_overlap = get_settings().chunk_overlap
     if "top_k" not in st.session_state:
         st.session_state.top_k = get_settings().top_k
+    if "cloud_synced" not in st.session_state:
+        from src.cloud.gcs_storage import sync_from_gcs
+
+        sync_from_gcs()
+        st.session_state.cloud_synced = True
 
     sync_index_state()
 
@@ -269,10 +276,13 @@ def generate_assistant_response() -> None:
     if not prompt:
         return
 
+    settings = get_settings()
+    started_at = time.perf_counter()
+
     with st.chat_message("assistant", avatar=":material/psychology:"):
         try:
             with st.spinner("Retrieving context and synthesizing answer..."):
-                top_k = st.session_state.get("top_k", get_settings().top_k)
+                top_k = st.session_state.get("top_k", settings.top_k)
                 documents = retrieve_documents(prompt, k=top_k)
                 sources = format_sources(documents)
 
@@ -286,6 +296,22 @@ def generate_assistant_response() -> None:
                     "sources": sources,
                 }
             )
+
+            if settings.bigquery_enabled:
+                from src.cloud.bigquery_logger import log_query_event
+
+                top_relevance = max(
+                    (source.get("relevance", 0) for source in sources),
+                    default=0,
+                )
+                log_query_event(
+                    question=prompt,
+                    answer_preview=response,
+                    provider=settings.llm_provider,
+                    chunks_retrieved=len(sources),
+                    top_relevance=float(top_relevance),
+                    response_ms=int((time.perf_counter() - started_at) * 1000),
+                )
         except FileNotFoundError as error:
             st.error(str(error))
         except Exception as error:
@@ -317,6 +343,12 @@ def main() -> None:
     with left_col:
         render_pipeline(st.session_state.index_ready, len(uploaded_files))
         render_system_insights(manifest)
+
+        if get_settings().bigquery_enabled or get_settings().gcs_enabled:
+            from src.cloud.bigquery_logger import get_analytics_summary
+
+            render_cloud_panel(get_analytics_summary())
+
         render_quick_actions(QUICK_ACTIONS)
 
     with right_col:

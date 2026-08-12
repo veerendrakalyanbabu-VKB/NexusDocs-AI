@@ -31,12 +31,15 @@ def _html(content: str) -> None:
 
 def render_hero() -> None:
     settings = get_settings()
-    provider = "OpenAI" if settings.llm_provider == "openai" else "FLAN-T5"
-    model_label = (
-        settings.openai_model.split("/")[-1]
-        if settings.llm_provider == "openai"
-        else settings.local_llm_model.split("/")[-1]
-    )
+    if settings.llm_provider == "vertex":
+        provider = "Vertex AI"
+        model_label = settings.vertex_model
+    elif settings.llm_provider == "openai":
+        provider = "OpenAI"
+        model_label = settings.openai_model.split("/")[-1]
+    else:
+        provider = "FLAN-T5"
+        model_label = settings.local_llm_model.split("/")[-1]
 
     _html(
         f"""
@@ -157,11 +160,13 @@ def render_pipeline(index_ready: bool, file_count: int = 0) -> None:
 def render_system_insights(manifest: dict) -> None:
     settings = get_settings()
     embedding = manifest.get("embedding_model", settings.embedding_model).split("/")[-1]
-    provider_label = (
-        f"{settings.llm_provider.title()} · {settings.openai_model.split('/')[-1]}"
-        if settings.llm_provider == "openai"
-        else f"Local · {settings.local_llm_model.split('/')[-1]}"
-    )
+
+    if settings.llm_provider == "vertex":
+        provider_label = f"Vertex AI · {settings.vertex_model}"
+    elif settings.llm_provider == "openai":
+        provider_label = f"OpenAI · {settings.openai_model.split('/')[-1]}"
+    else:
+        provider_label = f"Local · {settings.local_llm_model.split('/')[-1]}"
 
     _html(
         f"""
@@ -334,16 +339,49 @@ def render_sidebar_progress(index_ready: bool, file_count: int) -> None:
 
 
 def render_footer() -> None:
+    settings = get_settings()
+    cloud_note = " · Cloud Run" if settings.is_cloud_deployment else ""
+
     _html(
-        """
+        f"""
         <div class="app-footer">
             <div class="footer-inner">
                 <span class="footer-brand">✦ NexusDocs AI</span>
                 <span class="footer-divider">·</span>
-                <span class="footer-text">Built with RAG · FAISS · Streamlit</span>
+                <span class="footer-text">RAG · FAISS · Streamlit{cloud_note}</span>
                 <span class="footer-divider">·</span>
                 <span class="footer-text">Portfolio Project 2026</span>
             </div>
         </div>
         """
     )
+
+
+def render_cloud_panel(analytics: dict) -> None:
+    settings = get_settings()
+    if not (settings.gcs_enabled or settings.bigquery_enabled or settings.is_cloud_deployment):
+        return
+
+    gcs_status = "Connected" if settings.gcs_enabled else "Disabled"
+    bq_status = "Connected" if analytics.get("enabled") else "Disabled"
+    vertex_status = "Active" if settings.llm_provider == "vertex" else "Standby"
+
+    _html(
+        f"""
+        <div class="panel-shell cloud-panel">
+            <div class="panel-title">Google Cloud integration</div>
+            <div class="insight-grid">
+                <div class="insight-item"><span>Cloud Storage</span><strong>{html.escape(gcs_status)}</strong></div>
+                <div class="insight-item"><span>BigQuery</span><strong>{html.escape(bq_status)}</strong></div>
+                <div class="insight-item"><span>Vertex AI</span><strong>{html.escape(vertex_status)}</strong></div>
+                <div class="insight-item"><span>Region</span><strong>{html.escape(settings.gcp_region)}</strong></div>
+            </div>
+        </div>
+        """
+    )
+
+    if analytics.get("enabled"):
+        st.caption(
+            f"Logged queries: {analytics.get('total_queries', 0)} · "
+            f"Avg response: {analytics.get('avg_response_ms', 0)} ms"
+        )

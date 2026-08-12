@@ -10,13 +10,14 @@ Upload documents · Build a semantic index · Ask questions · Get cited answers
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.61-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit_Cloud-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://nexusdocs-ai.streamlit.app)
 [![RAG](https://img.shields.io/badge/RAG-Pipeline-22C55E?style=for-the-badge)](https://github.com/veerendrakalyanbabu-VKB/AI-Document-QA-Assistant)
 [![FAISS](https://img.shields.io/badge/Vector_Search-FAISS-6366F1?style=for-the-badge)](https://github.com/facebookresearch/faiss)
 [![License](https://img.shields.io/badge/License-MIT-64748B?style=for-the-badge)](LICENSE)
 
 <br>
 
-[Features](#-features) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [Documentation](#-documentation) · [Author](#-author)
+[Live Demo](https://nexusdocs-ai.streamlit.app) · [Features](#-features) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [Documentation](#-documentation) · [Author](#-author)
 
 </div>
 
@@ -31,6 +32,12 @@ Built as a portfolio-grade project to demonstrate real-world **RAG**, **prompt e
 ---
 
 ## Demo
+
+### Live app
+
+**[https://nexusdocs-ai.streamlit.app](https://nexusdocs-ai.streamlit.app)**
+
+> First deploy? See [Streamlit deployment guide](docs/STREAMLIT_DEPLOYMENT.md) — set app URL to `nexusdocs-ai` and add your OpenAI key in Secrets.
 
 | Step | Action |
 |------|--------|
@@ -193,6 +200,8 @@ pytest tests/ -v
 |----------|-------------|
 | [Architecture](docs/ARCHITECTURE.md) | System design and component breakdown |
 | [Interview Guide](docs/INTERVIEW_GUIDE.md) | How to explain RAG in interviews |
+| [Streamlit Deployment](docs/STREAMLIT_DEPLOYMENT.md) | Deploy Project 2 live demo (free) |
+| [GCP Deployment](docs/GCP_DEPLOYMENT.md) | Project 3 cloud setup and deploy guide |
 
 ---
 
@@ -209,10 +218,32 @@ pytest tests/ -v
 
 ## Roadmap
 
+- [x] GCP cloud deployment (Portfolio Project #3) — see [GCP Deployment Guide](docs/GCP_DEPLOYMENT.md)
+- [x] Docker containerization
 - [ ] Hybrid retrieval (semantic + keyword)
-- [ ] Docker deployment
 - [ ] Evaluation harness for answer quality
-- [ ] GCP cloud deployment (Portfolio Project #3)
+- [ ] Secret Manager integration
+
+---
+
+## Project 3 — GCP Generative AI Application
+
+Cloud extension of NexusDocs AI integrating **Google Cloud Run**, **Cloud Storage**, **BigQuery**, **Vertex AI Gemini**, and **IAM**.
+
+| Component | Technology |
+|-----------|------------|
+| Hosting | Cloud Run |
+| Document persistence | Cloud Storage |
+| Structured analytics | BigQuery + SQL |
+| GenAI | Vertex AI (Gemini) |
+| Access control | IAM service accounts |
+
+**Deploy:** see [docs/GCP_DEPLOYMENT.md](docs/GCP_DEPLOYMENT.md)
+
+```powershell
+.\scripts\gcp-setup.ps1 -ProjectId YOUR_PROJECT_ID
+.\scripts\gcp-deploy.ps1 -ProjectId YOUR_PROJECT_ID
+```
 
 ---
 

@@ -6,10 +6,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Generator, Iterable
 
-import torch
 from langchain_core.documents import Document
 from langchain_core.messages import HumanMessage, SystemMessage
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 from src.config import get_settings
 from src.retriever import retrieve_with_scores
@@ -46,6 +44,9 @@ def _trim_context(context: str, max_chars: int = LOCAL_MAX_CONTEXT_CHARS) -> str
 
 @lru_cache(maxsize=1)
 def create_local_llm(model_name: str):
+    import torch
+    from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
@@ -131,6 +132,11 @@ def generate_answer(
 
     if not context.strip():
         return "I don't know based on the provided document."
+
+    if provider_name == "vertex":
+        from src.cloud.vertex_ai import generate_vertex_answer
+
+        return generate_vertex_answer(question, context)
 
     if provider_name == "openai":
         llm = create_openai_llm(

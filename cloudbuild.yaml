@@ -1,0 +1,40 @@
+substitutions:
+  _SERVICE_NAME: nexusdocs-ai
+  _REGION: us-central1
+  _REPOSITORY: nexusdocs
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE_NAME}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
+      - --region=${_REGION}
+      - --platform=managed
+      - --allow-unauthenticated
+      - --memory=4Gi
+      - --cpu=2
+      - --timeout=300
+      - --port=8080
+      - --set-env-vars=DEPLOYMENT_ENV=cloud,GCP_PROJECT=$PROJECT_ID,GCP_REGION=${_REGION}
+      - --set-secrets=GCS_BUCKET=nexusdocs-gcs-bucket:latest,BQ_DATASET=nexusdocs-bq-dataset:latest
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
+
+options:
+  logging: CLOUD_LOGGING_ONLY
