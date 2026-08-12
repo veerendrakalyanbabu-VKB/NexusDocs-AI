@@ -47,7 +47,7 @@ Built as a portfolio-grade project to demonstrate real-world **RAG**, **prompt e
 | 4 | Ask a question in the chat panel |
 | 5 | Review the answer and expand **source citations** |
 
-> Run locally: `streamlit run app.py` → [http://localhost:8501](http://localhost:8501)
+> Run locally: `streamlit run app.py` (opens in your browser automatically)
 
 **NexusDocs AI** is the product name used in the Streamlit interface.
 
@@ -165,7 +165,7 @@ Without an API key, install `requirements-local.txt` and the app uses local FLAN
 streamlit run app.py
 ```
 
-Open **[http://localhost:8501](http://localhost:8501)**
+The app opens automatically in your default browser.
 
 ---
 
