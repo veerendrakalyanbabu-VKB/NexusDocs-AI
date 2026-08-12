@@ -1,0 +1,20 @@
+[theme]
+base = "dark"
+primaryColor = "#6366F1"
+backgroundColor = "#04060F"
+secondaryBackgroundColor = "#0C1224"
+textColor = "#F8FAFC"
+linkColor = "#22D3EE"
+codeBackgroundColor = "#111827"
+borderColor = "#1E293B"
+font = "Space Grotesk"
+
+[[theme.fontFaces]]
+family = "Space Grotesk"
+url = "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false

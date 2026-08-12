@@ -1,0 +1,35 @@
+AI Document Q&A Assistant — Sample Knowledge Base
+=================================================
+
+Overview
+--------
+This sample document demonstrates the ingestion and retrieval workflow for the
+AI Document Q&A Assistant. Upload this file, build the knowledge base, and ask
+questions such as:
+
+- What is this project about?
+- Which file formats are supported?
+- What embedding model does the app use?
+
+Supported file formats
+----------------------
+The application accepts PDF, DOCX, and TXT documents. Uploaded files are stored
+locally, split into overlapping chunks, embedded with sentence-transformers, and
+indexed in FAISS for semantic search.
+
+Retrieval-augmented generation
+----------------------------
+When a user asks a question, the system retrieves the most relevant document
+chunks, injects them into a grounded prompt, and generates an answer with a
+local or cloud language model. Source citations are displayed in the UI so users
+can verify the response against the original material.
+
+Technology stack
+----------------
+- Python
+- Streamlit
+- LangChain
+- Hugging Face Transformers
+- Sentence Transformers
+- FAISS
+- Optional OpenAI API
