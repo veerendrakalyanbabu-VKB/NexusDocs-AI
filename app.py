@@ -296,6 +296,20 @@ def main() -> None:
     inject_global_styles()
     init_session_state()
     handle_file_deletion()
+
+    settings = get_settings()
+    if settings.llm_provider == "local":
+        try:
+            import torch  # noqa: F401
+            import transformers  # noqa: F401
+        except ImportError:
+            st.warning(
+                "Running in cloud-compatible mode. Add **OPENAI_API_KEY** in "
+                "`.env` or Streamlit Secrets for full AI answers, or run "
+                "`pip install -r requirements-local.txt` for offline FLAN-T5.",
+                icon=":material/info:",
+            )
+
     render_sidebar()
 
     render_hero()

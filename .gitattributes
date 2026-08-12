@@ -1,0 +1,7 @@
+# Ensure text files stay UTF-8 in git (prevents corrupted requirements on Windows)
+requirements.txt text eol=lf
+requirements-local.txt text eol=lf
+requirements-dev.txt text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.toml text eol=lf

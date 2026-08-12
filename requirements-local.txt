@@ -1,5 +1,5 @@
-# Optional local-only dependencies (offline FLAN-T5 + Hugging Face embeddings)
-# Install after requirements.txt for full local development:
+# Optional — offline local mode (FLAN-T5 + Hugging Face embeddings)
+# Run after requirements.txt:
 #   pip install -r requirements-local.txt
 
 langchain-huggingface>=0.1.0

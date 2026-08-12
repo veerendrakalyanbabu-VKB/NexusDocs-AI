@@ -22,24 +22,20 @@ DEFAULT_TOP_K = 4
 DEFAULT_HUGGINGFACE_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 DEFAULT_OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
 DEFAULT_LOCAL_LLM = "google/flan-t5-small"
-DEFAULT_OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 
 @dataclass(frozen=True)
 class AppSettings:
-    upload_dir: Path = UPLOAD_DIR
-    index_dir: Path = INDEX_DIR
-    chunk_size: int = DEFAULT_CHUNK_SIZE
-    chunk_overlap: int = DEFAULT_CHUNK_OVERLAP
-    top_k: int = DEFAULT_TOP_K
-    huggingface_embedding_model: str = DEFAULT_HUGGINGFACE_EMBEDDING_MODEL
-    openai_embedding_model: str = os.getenv(
-        "OPENAI_EMBEDDING_MODEL",
-        DEFAULT_OPENAI_EMBEDDING_MODEL,
-    )
-    local_llm_model: str = DEFAULT_LOCAL_LLM
-    openai_model: str = DEFAULT_OPENAI_MODEL
-    openai_api_key: str | None = os.getenv("OPENAI_API_KEY")
+    upload_dir: Path
+    index_dir: Path
+    chunk_size: int
+    chunk_overlap: int
+    top_k: int
+    huggingface_embedding_model: str
+    openai_embedding_model: str
+    local_llm_model: str
+    openai_model: str
+    openai_api_key: str | None
 
     @property
     def embedding_model(self) -> str:
@@ -57,4 +53,18 @@ class AppSettings:
 
 
 def get_settings() -> AppSettings:
-    return AppSettings()
+    return AppSettings(
+        upload_dir=UPLOAD_DIR,
+        index_dir=INDEX_DIR,
+        chunk_size=DEFAULT_CHUNK_SIZE,
+        chunk_overlap=DEFAULT_CHUNK_OVERLAP,
+        top_k=DEFAULT_TOP_K,
+        huggingface_embedding_model=DEFAULT_HUGGINGFACE_EMBEDDING_MODEL,
+        openai_embedding_model=os.getenv(
+            "OPENAI_EMBEDDING_MODEL",
+            DEFAULT_OPENAI_EMBEDDING_MODEL,
+        ),
+        local_llm_model=DEFAULT_LOCAL_LLM,
+        openai_model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+        openai_api_key=os.getenv("OPENAI_API_KEY") or None,
+    )
