@@ -51,12 +51,6 @@ Built as a portfolio-grade project to demonstrate real-world **RAG**, **prompt e
 
 **NexusDocs AI** is the product name used in the Streamlit interface.
 
-> **Tip:** Add a screenshot at `docs/assets/demo.png` and uncomment the line below for extra impact on GitHub.
-
-<!-- ![NexusDocs AI Demo](docs/assets/demo.png) -->
-
----
-
 ## Features
 
 | Capability | Description |
