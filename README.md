@@ -117,8 +117,8 @@ Upload → Ingest → Chunk → Embed → Index → Retrieve → Generate → St
 ### Installation
 
 ```bash
-git clone https://github.com/veerendrakalyanbabu-VKB/AI-Document-QA-Assistant.git
-cd AI-Document-QA-Assistant
+git clone https://github.com/veerendrakalyanbabu-VKB/NexusDocs-AI.git
+cd NexusDocs-AI
 python -m venv .venv
 ```
 
@@ -166,7 +166,7 @@ The app opens automatically in your default browser.
 ## Project Structure
 
 ```text
-AI-Document-QA-Assistant/
+NexusDocs-AI/
 ├── app.py                  # Streamlit entry point
 ├── src/
 │   ├── config.py           # Environment & paths
@@ -230,7 +230,7 @@ pytest tests/ -v
 AI / GenAI Portfolio Project · 2026
 
 - GitHub: [@veerendrakalyanbabu-VKB](https://github.com/veerendrakalyanbabu-VKB)
-- Repository: [AI-Document-QA-Assistant](https://github.com/veerendrakalyanbabu-VKB/AI-Document-QA-Assistant)
+- Repository: [NexusDocs-AI](https://github.com/veerendrakalyanbabu-VKB/NexusDocs-AI)
 
 ---
 
