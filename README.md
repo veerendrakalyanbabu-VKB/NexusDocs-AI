@@ -11,7 +11,7 @@ Upload documents · Build a semantic index · Ask questions · Get cited answers
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.61-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit_Cloud-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://nexusdocs-ai.streamlit.app)
-[![RAG](https://img.shields.io/badge/RAG-Pipeline-22C55E?style=for-the-badge)](https://github.com/veerendrakalyanbabu-VKB/AI-Document-QA-Assistant)
+[![RAG](https://img.shields.io/badge/RAG-Pipeline-22C55E?style=for-the-badge)](https://github.com/veerendrakalyanbabu-VKB/NexusDocs-AI)
 [![FAISS](https://img.shields.io/badge/Vector_Search-FAISS-6366F1?style=for-the-badge)](https://github.com/facebookresearch/faiss)
 [![License](https://img.shields.io/badge/License-MIT-64748B?style=for-the-badge)](LICENSE)
 
@@ -27,7 +27,7 @@ Upload documents · Build a semantic index · Ask questions · Get cited answers
 
 An end-to-end **GenAI application** that lets users upload **PDF, DOCX, and TXT** files, index them with **semantic embeddings**, retrieve the most relevant passages with **FAISS**, and generate **grounded answers** using a local **FLAN-T5** model or optional **OpenAI API**.
 
-Built as a portfolio-grade project to demonstrate real-world **RAG**, **prompt engineering**, **vector search**, and **LLM application development**.
+The repository is a working reference implementation of **RAG**, prompt construction, vector search, and LLM application development, with explicit local-model and provider-backed execution paths.
 
 ---
 
